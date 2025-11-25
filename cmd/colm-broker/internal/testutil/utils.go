@@ -1,0 +1,52 @@
+package testutil
+
+import (
+	"context"
+	"fmt"
+	"net/http"
+	"time"
+)
+
+func WaitForReady(
+	ctx context.Context,
+	timeout time.Duration,
+	endpoint string,
+) error {
+	client := http.Client{}
+	start := time.Now()
+
+	for {
+		req, err := http.NewRequestWithContext(
+			ctx,
+			http.MethodGet,
+			endpoint,
+			nil,
+		)
+		if err != nil {
+			return fmt.Errorf("failed to create request: %w", err)
+		}
+
+		resp, err := client.Do(req)
+		if err != nil {
+			fmt.Printf("Error making request: %s\n", err.Error())
+			continue
+		}
+
+		if resp.StatusCode == http.StatusOK {
+			fmt.Println("Endpoint is ready!")
+			resp.Body.Close()
+			return nil
+		}
+		resp.Body.Close()
+
+		select {
+		case <-ctx.Done():
+			return ctx.Err()
+		default:
+			if time.Since(start) >= timeout {
+				return fmt.Errorf("timeout reached while waiting for endpoint")
+			}
+			time.Sleep(250 * time.Millisecond)
+		}
+	}
+}
