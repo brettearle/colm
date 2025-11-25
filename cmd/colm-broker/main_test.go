@@ -29,12 +29,13 @@ func Test(t *testing.T) {
 			t.Errorf("Failed to create request")
 		}
 		client := http.Client{}
-		res, err := client.Do(req)
+		resp, err := client.Do(req)
 		if err != nil {
 			t.Errorf("Error sending request")
 		}
-		if res.StatusCode != http.StatusOK {
-			t.Errorf("got %d want %d", res.StatusCode, http.StatusOK)
+		defer resp.Body.Close()
+		if resp.StatusCode != http.StatusOK {
+			t.Errorf("got %d want %d", resp.StatusCode, http.StatusOK)
 		}
 	})
 }
