@@ -1,0 +1,21 @@
+### Node / Frontend
+# Ignore node_modules in all subdirectories
+**/node_modules/
+
+### Environment files (ALL projects)
+**/.env
+**/.env.*
+*.env
+.env
+
+# Common build output dirs
+bin/
+dist/
+build/
+
+### Logs
+*.log
+
+### OS / Editor junk
+.DS_Store
+.vscode/
