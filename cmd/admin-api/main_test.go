@@ -38,4 +38,20 @@ func Test(t *testing.T) {
 			t.Errorf("got %d want %d", resp.StatusCode, http.StatusOK)
 		}
 	})
+
+	t.Run("/pull returns 200", func(t *testing.T) {
+		req, err := http.NewRequestWithContext(ctx, http.MethodGet, "http://0.0.0.0:8081/pull", nil)
+		if err != nil {
+			t.Errorf("Failed to create request")
+		}
+		client := http.Client{}
+		resp, err := client.Do(req)
+		if err != nil {
+			t.Errorf("Error sending request")
+		}
+		defer resp.Body.Close()
+		if resp.StatusCode != http.StatusOK {
+			t.Errorf("got %d want %d", resp.StatusCode, http.StatusOK)
+		}
+	})
 }

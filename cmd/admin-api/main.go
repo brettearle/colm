@@ -17,11 +17,18 @@ type Config struct {
 	Port string
 }
 
-func NewServer() http.Handler {
-	mux := http.NewServeMux()
+func addRoutes(mux *http.ServeMux) {
 	mux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 	})
+	mux.HandleFunc("/pull", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+	})
+}
+
+func NewServer() http.Handler {
+	mux := http.NewServeMux()
+	addRoutes(mux)
 	var handler http.Handler = mux
 	return handler
 }
